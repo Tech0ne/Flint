@@ -1,5 +1,5 @@
-title: Raytracer
-description: Test config file
+title: Flint
+description: C++ library
 output: docs
 files:
   - "*/*.hpp"
