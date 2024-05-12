@@ -1,13 +1,13 @@
 ---
-title: Raytracer
-description: Test config file
+title: Flint
+description: C++ library
 generator: doxide
 ---
 
 
-# Raytracer
+# Flint
 
-Test config file
+C++ library
 
 :material-package: [Flint](Flint/index.md)
 :   
