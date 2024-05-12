@@ -1,0 +1,6 @@
+title: Raytracer
+description: Test config file
+output: docs
+files:
+  - "*/*.hpp"
+  - "**/*.hpp"

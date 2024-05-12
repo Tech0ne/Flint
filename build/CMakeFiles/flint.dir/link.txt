@@ -1,0 +1,1 @@
+/usr/bin/c++ -rdynamic CMakeFiles/flint.dir/src/Colors.cpp.o CMakeFiles/flint.dir/src/CxxABI.cpp.o CMakeFiles/flint.dir/src/Exceptions.cpp.o CMakeFiles/flint.dir/src/main.cpp.o -o flint 
