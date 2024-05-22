@@ -18,7 +18,8 @@ add_executable(flint
     src/Colors.cpp
     src/CxxABI.cpp
     src/Exceptions.cpp
-    # src/Json.cpp
+    src/Init.cpp
+    src/Json.cpp
     src/main.cpp
 )
 

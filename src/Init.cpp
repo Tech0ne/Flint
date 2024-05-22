@@ -1,9 +1,9 @@
 /* ------------------------------------------------------------------------------------ *
  *                                                                                      *
  * EPITECH PROJECT - Thu, May, 2024                                                     *
- * Title           - CppLib                                                             *
+ * Title           - Flint                                                              *
  * Description     -                                                                    *
- *     Preprocessor                                                                     *
+ *     Init                                                                             *
  *                                                                                      *
  * ------------------------------------------------------------------------------------ *
  *                                                                                      *
@@ -17,23 +17,23 @@
  *                                                                                      *
  * ------------------------------------------------------------------------------------ */
 
-#ifndef INCLUDED_PREPROCESSOR_HPP
-    #define INCLUDED_PREPROCESSOR_HPP
+#include "Init.hpp"
 
-#if defined(__GNUC__)
-    #define __FUNCTION__ __PRETTY_FUNCTION__
-#elif defined(_MSC_VER)
-    #define __FUNCTION__ __FUNCSIG__
-#else
-    #define __FUNCTION__ __func__
-#endif
+void unhandeled_exception()
+{
+    try {
+        std::rethrow_exception(std::current_exception());
+    } catch (const std::exception& e) {
+        const Flint::Exceptions::Exception* exception = dynamic_cast<const Flint::Exceptions::Exception*>(&e);
+        if (exception != nullptr) {
+            std::cerr << Flint::Colors::RED << "/!\\ Uncaught Flint exception /!\\" << std::endl << std::endl << exception << std::endl;
+        } else {
+            std::cerr << Flint::Colors::RED << "/!\\ Uncaught exception /!\\" << std::endl << std::endl << e.what() << std::endl;
+        }
+    }
+}
 
-    #define __POSITION_INFOS__ {{std::string(__FILE__), __LINE__}, std::string(__FUNCTION__)}
-    #define throw_exception(exception, message) throw(exception(message, __POSITION_INFOS__))
-    #define catch_exception(exception) exception.show(__POSITION_INFOS__)
+void Flint::Init()
+{
 
-// Inspection
-    #define display_attr(attribute) Flint::Colors::F_BLUE << #attribute << Flint::Colors::RESET << "=" << Flint::Colors::RED << this->attribute << Flint::Colors::RESET
-    #define make_str(display) ({std::stringstream ss; ss << Flint::Colors::RESET << "<" << Flint::Colors::F_PURPLE << this->getClassName() << Flint::Colors::RESET << " at " << Flint::Colors::YELLOW << std::hex << this << std::dec << Flint::Colors::RESET << ": " << display << ">"; ss.str();})
-
-#endif
+}

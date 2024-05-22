@@ -32,7 +32,7 @@ namespace Flint
       * std::cout << Flint::Colors::GREEN << "Hacker time" << Flint::Colors::RESET << std::endl;
       *
       * @info
-      * Please **ALWAYS** remember to close your colors with Flint::Colors::RESET.
+      * Please ALWAYS remember to close your colors with Flint::Colors::RESET.
       * Failure to do si might result in broken displays, with weird colors everywhere
     */
     class Colors
