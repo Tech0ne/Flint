@@ -16,6 +16,7 @@
  * ------------------------------------------------------------------------------------ */
 
 #include "Flint.hpp"
+#include <fstream>
 
 class SubClass: public Flint::Inspection<SubClass>
 {
@@ -48,8 +49,27 @@ class Test: public Flint::Inspection<Test>
         }
 };
 
+std::string readFile(std::string filename)
+{
+    std::stringstream file_buffer;
+    std::ifstream newFile(filename);
+    if (newFile.good()){
+        file_buffer << newFile.rdbuf();
+        newFile.close();
+    }
+    return file_buffer.str();
+}
+
 int main()
 {
+    try {
+        Flint::Json::JsonObject json = Flint::Json::Loader::Load(readFile("file.json"));
+        std::cout << json << std::endl;
+    } catch (const Flint::Exceptions::Exception& e) {
+        std::cerr << catch_exception(e) << std::endl;
+    }
     Test obj;
     std::cout << obj << std::endl;
+
+    throw_exception(Flint::Exceptions::NotImplementedError, "Should be caught by the handler");
 }

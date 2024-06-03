@@ -25,6 +25,7 @@
     #include "Debug.hpp"
     #include "Exceptions.hpp"
     #include "Inspection.hpp"
+    #include "Init.hpp"
     #include "Json.hpp"
 
 #endif

@@ -75,11 +75,11 @@ namespace Flint
 
             bool                                _bool;
             double                              _double;
-            std::vector<JsonObject>            *_list;
+            std::vector<JsonObject>*            _list;
             long                                _long;
             nullptr_t                           _none;
-            std::map<std::string, JsonObject>  *_object;
-            std::string                        *_string;
+            std::map<std::string, JsonObject>*  _object;
+            std::string*                        _string;
         } JsonValue;
 
         typedef enum {
@@ -97,6 +97,8 @@ namespace Flint
             private:
                 JsonValue _value;
                 JsonType _type = JsonType::NONE;
+
+                void setType(JsonType type);
 
             public:
                 ~JsonObject();
@@ -151,13 +153,13 @@ namespace Flint
                 void append(T arg)
                 {
                     if (this->_type == JsonType::LIST) {
-                        this->_value._list->push_back(arg);
+                        this->_value._list.push_back(arg);
                         return;
                     }
                     this->clear();
                     this->_type = JsonType::LIST;
-                    this->_value._list->clear();
-                    this->_value._list->push_back(arg);
+                    this->_value._list.clear();
+                    this->_value._list.push_back(arg);
                 }
 
                 template <typename T, typename... U>
@@ -198,7 +200,7 @@ namespace Flint
                 {
                     this->clear();
                     this->_type = JsonType::STRING;
-                    this->_value._string = new std::string(s);
+                    this->_value._string = s;
                     return *this;
                 }
 

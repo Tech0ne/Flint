@@ -23,7 +23,7 @@
 
 namespace Flint
 {
-    void Init() __attribute__((constructor));
+    void Init() [[gnu::constructor]];
 }
 
 #endif

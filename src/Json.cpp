@@ -324,13 +324,15 @@ namespace Flint::Json
     JsonObject::JsonObject(std::initializer_list<JsonObject> list)
     {
         this->_type = JsonType::LIST;
-        this->_value._list = new std::vector<JsonObject>(list);
+        for( auto i = list.begin(), e = list.end(); i != e; ++i, ++i )
+            operator[](i->ToString()) = *std::next(i);
+        // this->_value._list = std::vector<JsonObject>(list);
     }
 
     JsonObject::JsonObject(std::map<std::string, JsonObject> object)
     {
         this->_type = JsonType::OBJECT;
-        this->_value._object = new std::map<std::string, JsonObject>(object);
+        this->_value._object = object;
     }
 
     JsonObject::JsonObject(const JsonObject& other):
@@ -358,7 +360,7 @@ namespace Flint::Json
                 break;
 
             case JsonType::OBJECT:
-                this->_value._object = new std::map<std::string, JsonObject>(*other._value._object);
+                this->_value._object = std::map<std::string, JsonObject>(other._value._object);
                 break;
 
             case JsonType::STRING:
@@ -447,7 +449,7 @@ namespace Flint::Json
     {
         if (this->_type != JsonType::OBJECT)
             throw_exception(Flint::Exceptions::InvalidJsonTypeError, "operator[] with std::string key require JsonType::OBJECT, but got JsonType::" + this->getTypeStr());
-        return this->_value._object->operator[](key);
+        return this->_value._object.operator[](key);
     }
 
     JsonObject& JsonObject::operator[](long index)
@@ -456,30 +458,14 @@ namespace Flint::Json
             throw_exception(Flint::Exceptions::InvalidJsonTypeError, "operator[] with long key require JsonType::LISt, but got JsonType::" + this->getTypeStr());
 
         while (index < 0)
-            index += (long)this->_value._list->size();
-        if (index >= (long)this->_value._list->size())
-            this->_value._list->resize(index + 1);
-        return this->_value._list->operator[](index);
+            index += (long)this->_value._list.size();
+        if (index >= (long)this->_value._list.size())
+            this->_value._list.resize(index + 1);
+        return this->_value._list.operator[](index);
     }
 
     void JsonObject::clear()
     {
-        switch (this->_type)
-        {
-            case JsonType::LIST:
-                delete this->_value._list;
-                break;
-
-            case JsonType::OBJECT:
-                delete this->_value._object;
-                break;
-
-            case JsonType::STRING:
-                delete this->_value._string;
-                break;
-            default:
-                break;
-        }
         this->_type = JsonType::NONE;
     }
 
@@ -490,7 +476,7 @@ namespace Flint::Json
 
     const JsonObject& JsonObject::at(const std::string& key) const
     {
-        return this->_value._object->at(key);
+        return this->_value._object.at(key);
     }
 
     JsonObject& JsonObject::at(long index)
@@ -500,21 +486,21 @@ namespace Flint::Json
 
     const JsonObject& JsonObject::at(long index) const
     {
-        return this->_value._list->at(index);
+        return this->_value._list.at(index);
     }
 
     int JsonObject::length() const
     {
         if (this->_type != JsonType::LIST)
             throw_exception(Flint::Exceptions::InvalidJsonTypeError, "length() method require JsonType::LIST, but got JsonType::" + this->getTypeStr());
-        return this->_value._list->size();
+        return this->_value._list.size();
     }
 
     bool JsonObject::hasKey(const std::string& key) const
     {
         if (this->_type != JsonType::OBJECT)
             throw_exception(Flint::Exceptions::InvalidJsonTypeError, "hasKey() method require JsonType::OBJECT, but got JsonType::" + this->getTypeStr());
-        return this->_value._object->find(key) != this->_value._object->end();
+        return this->_value._object.find(key) != this->_value._object.end();
     }
 
     int JsonObject::size() const
@@ -523,8 +509,8 @@ namespace Flint::Json
             this->_type != JsonType::LIST)
             throw_exception(Flint::Exceptions::InvalidJsonTypeError, "size() method require JsonType::OBJECT or JsonType::LIST, but got JsonType::" + this->getTypeStr());
         if (this->_type == JsonType::OBJECT)
-            return this->_value._object->size();
-        return this->_value._list->size();
+            return this->_value._object.size();
+        return this->_value._list.size();
     }
 
     JsonType JsonObject::getType() const
@@ -572,7 +558,7 @@ namespace Flint::Json
     {
         ok = (this->_type == JsonType::STRING);
         if (ok)
-            return Loader::Escape(*this->_value._string);
+            return Loader::Escape(this->_value._string);
         return "";
     }
 
@@ -641,7 +627,7 @@ namespace Flint::Json
                                 "{\n" +
                                 (colorize ? Flint::Colors::RESET : "");
                 bool skip = true;
-                for (auto& p : *this->_value._object) {
+                for (auto& p : this->_value._object) {
                     if (!skip)
                         s += (colorize ? Flint::Colors::F_CYAN : "") +
                             ",\n" +
@@ -671,7 +657,7 @@ namespace Flint::Json
                                 "[" +
                                 (colorize ? Flint::Colors::RESET : "");
                 bool skip = true;
-                for (auto& p : *this->_value._list) {
+                for (auto& p : this->_value._list) {
                     if (!skip)
                         s += (colorize ? Flint::Colors::F_CYAN : "") +
                             ", " +
@@ -689,7 +675,7 @@ namespace Flint::Json
                 return (colorize ? Flint::Colors::F_CYAN : "") +
                         "\"" +
                     (colorize ? Flint::Colors::RESET : "") +
-                        Loader::Escape(*this->_value._string) +
+                        Loader::Escape(this->_value._string) +
                     (colorize ? Flint::Colors::F_CYAN : "") +
                         "\"" +
                     (colorize ? Flint::Colors::RESET : "");
